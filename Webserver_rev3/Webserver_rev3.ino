@@ -56,7 +56,6 @@ void wificonnect() {                //Wifi connect function to connect to WPA2-E
 
 void input_num() {                     //contains the html data for the main input page
   String s = inputnum;
-  char bah;
   server.send(200, "text/html",s);
  // Serial.println(EEPROM.get(15, arrayTostore));
   if (server.arg(0)!= ""){
@@ -91,11 +90,13 @@ void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   EEPROM.begin(512);
+  String _hostname = EEPROM.get(1, arrayTostore);
+  Serial.println(_hostname.length());
   wificonnect();
 
-  if (EEPROM.get(15, arrayTostore) == ""){
+  if (_hostname == ""){
     if (MDNS.begin("itrolley")) {                     //sets the mDNS name, connect with "name.local"
-    Serial.println("MDNS responder started:1 ");      //print when successfully started
+    Serial.println("1) MDNS responder started: ");      //print when successfully started
     Serial.println("itrolley");
     //Serial.println(host);
   }
@@ -106,10 +107,10 @@ void setup() {
     Serial.println("HTTP server started ");
 }
   else {
-    char _hostname[12];
+    
     //temp.toCharArray(_hostname,12);
     if (MDNS.begin(EEPROM.get(1, arrayTostore))) {    //sets the mDNS name, connect with "example.local"
-    Serial.println("MDNS responder started:2");       //print when successfully started
+    Serial.println("2) MDNS responder started:");       //print when successfully started
     Serial.println(EEPROM.get(1, arrayTostore));
     //Serial.println(_hostname);
     }
@@ -119,9 +120,9 @@ void setup() {
     Serial.println("HTTP server started");
   }
 
+  delay(500);
 }
 
 void loop() {
   server.handleClient();
 }
-
