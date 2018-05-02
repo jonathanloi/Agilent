@@ -1,0 +1,7 @@
+Removed most of the useless pages that isnt needed.
+
+added in a java script promt to appear after submitting
+
+conditional added in for the mdns, if there is no input will use default host, if there is then will use the string
+
+
