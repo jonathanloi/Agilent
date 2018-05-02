@@ -4,19 +4,20 @@
 #include <ESP8266mDNS.h>
 #include <EEPROM.h>
 #include "Webpages.h"
-#include "user_interface.h"
-#include "wpa2_enterprise.h"
+extern "C" {
+  #include "user_interface.h"
+  #include "wpa2_enterprise.h"
+}
 
 ESP8266WebServer server(80);
 const int led = LED_BUILTIN;
 static const char* ssid = "spark";
 static const char* username = "jonatloi";
 static const char* password = "Jljon1999!";
-//const char* defaulthost = "itrolley";
 String temp = "";
-char arrayTostore[15];
+char arrayTostore[20];
 
-void wificonnect() {  //Wifi connect function to connect to WPA2-Enterprise wifi signals
+void wificonnect() {                //Wifi connect function to connect to WPA2-Enterprise wifi signals
 
   //WiFi.hostname(host);
   wifi_set_opmode(STATION_MODE);
@@ -53,15 +54,18 @@ void wificonnect() {  //Wifi connect function to connect to WPA2-Enterprise wifi
   server.send(200, "text/html",s);
 }*/
 
-void input_num() {  //contains the html data for the main input page
+void input_num() {                     //contains the html data for the main input page
   String s = inputnum;
+  char bah;
   server.send(200, "text/html",s);
+ // Serial.println(EEPROM.get(15, arrayTostore));
   if (server.arg(0)!= ""){
     temp = server.arg(0);
     Serial.println(temp);
     temp.toCharArray(arrayTostore, temp.length()+1);
-    EEPROM.put(15, arrayTostore);
+    EEPROM.put(1, arrayTostore);
     EEPROM.commit();
+    Serial.println(EEPROM.get(1, arrayTostore));
   }
 }
 /*void update_num(){
@@ -89,9 +93,9 @@ void setup() {
   EEPROM.begin(512);
   wificonnect();
 
-  if (temp == ""){
-    if (MDNS.begin("itrolley")) {    //sets the mDNS name, connect with "name.local"
-    Serial.println("MDNS responder started:1 "); //print when successfully started
+  if (EEPROM.get(15, arrayTostore) == ""){
+    if (MDNS.begin("itrolley")) {                     //sets the mDNS name, connect with "name.local"
+    Serial.println("MDNS responder started:1 ");      //print when successfully started
     Serial.println("itrolley");
     //Serial.println(host);
   }
@@ -103,11 +107,11 @@ void setup() {
 }
   else {
     char _hostname[12];
-    temp.toCharArray(_hostname,12);
-    if (MDNS.begin((char*)_hostname)) {    //sets the mDNS name, connect with "name.local"
-    Serial.println("MDNS responder started:2"); //print when successfully started
-    Serial.println(temp);
-    Serial.println(_hostname);
+    //temp.toCharArray(_hostname,12);
+    if (MDNS.begin(EEPROM.get(1, arrayTostore))) {    //sets the mDNS name, connect with "example.local"
+    Serial.println("MDNS responder started:2");       //print when successfully started
+    Serial.println(EEPROM.get(1, arrayTostore));
+    //Serial.println(_hostname);
     }
     server.on("/",input_num); 
     server.onNotFound(handleNotFound);
@@ -120,8 +124,4 @@ void setup() {
 void loop() {
   server.handleClient();
 }
-<<<<<<< HEAD
 
-=======
-
->>>>>>> 50158c019d473c785cf324415ea29f3f5be3900b
