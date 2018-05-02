@@ -112,8 +112,5 @@ const char MAIN_page[] PROGMEM = R"=====(
 					<p>Sorry, but the page you were trying to view does not exist.</p>
 				</body>
 				</html>
-<<<<<<< HEAD
 				)=====";
-=======
-				)=====";
->>>>>>> 50158c019d473c785cf324415ea29f3f5be3900b
+

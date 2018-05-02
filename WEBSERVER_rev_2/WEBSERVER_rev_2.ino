@@ -85,7 +85,7 @@ void setup() {
   EEPROM.begin(512);
   wificonnect();
 
-  if (temp == ""){
+  //if (temp == ""){
     if (MDNS.begin("itrolley")) {    //sets the mDNS name, connect with "name.local"
     Serial.println("MDNS responder started:1 "); //print when successfully started
     Serial.println("itrolley");
@@ -96,7 +96,7 @@ void setup() {
     server.onNotFound(handleNotFound);
     server.begin();
     Serial.println("HTTP server started ");
-}
+/*}
   else {
     char _hostname[12];
     temp.toCharArray(_hostname,12);
@@ -109,15 +109,12 @@ void setup() {
     server.onNotFound(handleNotFound);
     server.begin();
     Serial.println("HTTP server started");
-  }
+  }*/
+
 
 }
 
 void loop() {
   server.handleClient();
 }
-<<<<<<< HEAD
 
-=======
-
->>>>>>> 50158c019d473c785cf324415ea29f3f5be3900b
