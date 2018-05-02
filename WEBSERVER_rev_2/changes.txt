@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Removed most of the useless pages that isnt needed.
 
 added in a java script promt to appear after submitting
@@ -5,3 +6,12 @@ added in a java script promt to appear after submitting
 conditional added in for the mdns, if there is no input will use default host, if there is then will use the string
 
 
+=======
+Removed most of the useless pages that isnt needed.
+
+added in a java script promt to appear after submitting
+
+conditional added in for the mdns, if there is no input will use default host, if there is then will use the string
+
+
+>>>>>>> 50158c019d473c785cf324415ea29f3f5be3900b

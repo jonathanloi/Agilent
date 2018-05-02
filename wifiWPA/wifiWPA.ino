@@ -99,4 +99,8 @@ void wificonnect() {
   
 }
 
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> 50158c019d473c785cf324415ea29f3f5be3900b
