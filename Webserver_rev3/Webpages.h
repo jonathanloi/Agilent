@@ -17,22 +17,24 @@
 </html>
 )=====";
 
-
-		const char numupdate[] PROGMEM = R"=====(
+*/
+		const char mem_clear[] PROGMEM = R"=====(
 		<!DOCTYPE html>
 		<html>
 		  <head>
 			<style>
-			  body { background-color: Thistle;}
+			  body { background-color: lightpink;}
 			</style>
 		  </head>
+     <center>
 			<body>
-			  <h1>The mDNS name has been changed</h1><br> 
+			  <h1>EEPROM memory has been cleared</h1><br> 
 			</body>
-		  <br> <a href = '/'><button>Home</button></a>
+		  <br> <a href = '/'><button>Back</button></a>
+      </center>
 		</html>
 
-		)====="; */
+		)====="; 
 
 
 	const char inputnum[] PROGMEM = R"=====(
@@ -60,6 +62,7 @@
 		<br><br>
 		<input type= "submit" onclick = "con()">
 	  </form>
+   <br><a href="/"><button>Refresh Page</button></a>
 		</center>
 	</body>
 	</html>

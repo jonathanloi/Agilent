@@ -9,17 +9,22 @@ extern "C" {
   #include "wpa2_enterprise.h"
 }
 
-ESP8266WebServer server(80);
-const int led = LED_BUILTIN;
+//defines the WPA2-Enterprise details
 static const char* ssid = "spark";
 static const char* username = "jonatloi";
 static const char* password = "Jljon1999!";
+
+ESP8266WebServer server(80);
+const int led = LED_BUILTIN;
+
+//define global variables
 String temp = "";
 char arrayTostore[20];
 
-void wificonnect() {                //Wifi connect function to connect to WPA2-Enterprise wifi signals
 
-  //WiFi.hostname(host);
+//Wifi connect function to connect to WPA2-Enterprise wifi signals
+void wificonnect() {                
+
   wifi_set_opmode(STATION_MODE);
 
   struct station_config wifi_config;
@@ -45,58 +50,55 @@ void wificonnect() {                //Wifi connect function to connect to WPA2-E
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-  //Serial.println("Hostname: ");
-  //Serial.println(WiFi.hostname());
 }
 
-/*void handleRoot() {
-  String s = MAIN_page;
-  server.send(200, "text/html",s);
-}*/
 
-void input_num() {                     //contains the html data for the main input page
+// html data for the main input page
+void input_num() {                     
   String s = inputnum;
+  String _hostname = EEPROM.get(1, arrayTostore);
   server.send(200, "text/html",s);
- // Serial.println(EEPROM.get(15, arrayTostore));
-  if (server.arg(0)!= ""){
+  if (server.arg(0)!= "" && _hostname != server.arg(0)){
     temp = server.arg(0);
     Serial.println(temp);
     temp.toCharArray(arrayTostore, temp.length()+1);
     EEPROM.put(1, arrayTostore);
     EEPROM.commit();
     Serial.println(EEPROM.get(1, arrayTostore));
+    delay(2000);
+    ESP.restart();
   }
 }
-/*void update_num(){
-  int condition = 0;
-  String s = numupdate;
-    while(condition == 0){
-    host = temp;
-    Serial.println(host);
-    condition ++;
-    }
-    server.send(200, "text/html", s);
-    
- 
-}*/
+
+
+//html for eeprom memory clear
+void memClear(){
+  String s = mem_clear;
+  server.send(200, "text/html",s);
+  EEPROM.put(1,0);
+  EEPROM.commit();
+  }
+
+
+//html for the error page
 void handleNotFound(){
   String s = Error;
   server.send(404, "text/html",s);
 }
 
 
-
 void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   EEPROM.begin(512);
-  String _hostname = EEPROM.get(1, arrayTostore);
+  String _hostname = EEPROM.get(1, arrayTostore);    //set the string _hostname the stored value in eeprom
   Serial.println(_hostname.length());
   wificonnect();
 
+//if there is no input on the html form, this will run
   if (_hostname == ""){
-    if (MDNS.begin("itrolley")) {                     //sets the mDNS name, connect with "name.local"
-    Serial.println("1) MDNS responder started: ");      //print when successfully started
+    if (MDNS.begin("itrolley")) {   //sets the mDNS default name, connect with "itrolley.local"
+    Serial.println("1) MDNS responder started: ");    //print when successfully started
     Serial.println("itrolley");
     //Serial.println(host);
   }
@@ -106,23 +108,24 @@ void setup() {
     server.begin();
     Serial.println("HTTP server started ");
 }
+
+//if there is input it will run these instead
   else {
-    
-    //temp.toCharArray(_hostname,12);
-    if (MDNS.begin(EEPROM.get(1, arrayTostore))) {    //sets the mDNS name, connect with "example.local"
-    Serial.println("2) MDNS responder started:");       //print when successfully started
-    Serial.println(EEPROM.get(1, arrayTostore));
-    //Serial.println(_hostname);
+    if (MDNS.begin(EEPROM.get(1, arrayTostore))) {  //sets the mDNS name, connect with "example.local"
+    Serial.println("2) MDNS responder started:");   //print when successfully started
+    Serial.println(_hostname);    //print the mDNS name
     }
-    server.on("/",input_num); 
+    server.on("/",input_num);
+    server.on("/memclear",memClear); 
     server.onNotFound(handleNotFound);
     server.begin();
     Serial.println("HTTP server started");
   }
 
-  delay(500);
+ 
 }
 
 void loop() {
   server.handleClient();
+   delay(500);
 }
