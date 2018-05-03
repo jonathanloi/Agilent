@@ -63,6 +63,7 @@
 		<input type= "submit" onclick = "con()">
 	  </form>
    <br><a href="/"><button>Refresh Page</button></a>
+   <a href="/memclear"><button>Memory Clear</button></a>
 		</center>
 	</body>
 	</html>

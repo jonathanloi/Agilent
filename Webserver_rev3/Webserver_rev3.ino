@@ -77,6 +77,9 @@ void memClear(){
   server.send(200, "text/html",s);
   EEPROM.put(1,0);
   EEPROM.commit();
+  Serial.println("EEPROM memory has been reset");
+  delay(2000);
+  ESP.restart();
   }
 
 
@@ -100,10 +103,10 @@ void setup() {
     if (MDNS.begin("itrolley")) {   //sets the mDNS default name, connect with "itrolley.local"
     Serial.println("1) MDNS responder started: ");    //print when successfully started
     Serial.println("itrolley");
-    //Serial.println(host);
   }
   
     server.on("/",input_num); 
+    server.on("/memclear",memClear); 
     server.onNotFound(handleNotFound);
     server.begin();
     Serial.println("HTTP server started ");
@@ -127,5 +130,4 @@ void setup() {
 
 void loop() {
   server.handleClient();
-   delay(500);
 }
