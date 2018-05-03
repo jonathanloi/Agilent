@@ -30,7 +30,7 @@
 			<body>
 			  <h1>EEPROM memory has been cleared</h1><br> 
 			</body>
-		  <br> <a href = '/'><button>Back</button></a>
+		  <!--<br> <a href = '/'><button>Back</button></a>-->
       </center>
 		</html>
 
@@ -62,8 +62,7 @@
 		<br><br>
 		<input type= "submit" onclick = "con()">
 	  </form>
-   <br><a href="/"><button>Refresh Page</button></a>
-   <a href="/memclear"><button>Memory Clear</button></a>
+   <br><a href="/memclear"><button>Memory Clear</button></a>
 		</center>
 	</body>
 	</html>

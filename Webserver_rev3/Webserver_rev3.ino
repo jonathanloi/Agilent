@@ -94,7 +94,8 @@ void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   EEPROM.begin(512);
-  String _hostname = EEPROM.get(1, arrayTostore);    //set the string _hostname the stored value in eeprom
+  String _hostname = EEPROM.get(1, arrayTostore);  //set the string _hostname the stored value in eeprom
+  char* host_name = EEPROM.get(1, arrayTostore);
   Serial.println(_hostname.length());
   wificonnect();
 
@@ -114,9 +115,9 @@ void setup() {
 
 //if there is input it will run these instead
   else {
-    if (MDNS.begin(EEPROM.get(1, arrayTostore))) {  //sets the mDNS name, connect with "example.local"
+    if (MDNS.begin(host_name)) {  //sets the mDNS name, connect with "example.local"
     Serial.println("2) MDNS responder started:");   //print when successfully started
-    Serial.println(_hostname);    //print the mDNS name
+    Serial.println(host_name);    //print the mDNS name
     }
     server.on("/",input_num);
     server.on("/memclear",memClear); 
