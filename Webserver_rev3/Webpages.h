@@ -18,56 +18,58 @@
 )=====";
 
 */
-		const char mem_clear[] PROGMEM = R"=====(
-		<!DOCTYPE html>
-		<html>
-		  <head>
+const char mem_clear[] PROGMEM = R"=====(
+<!DOCTYPE html>
+	<html>
+		<head>
 			<style>
-			  body { background-color: lightpink;}
+			body { background-color: lightpink;}
 			</style>
-		  </head>
+				<script>
+					setTimeout(function(){
+						window.open("http://itrolley.local/");
+					},3000);
+				</script>
+		</head>
 			<center>
 				<body>
-				<h1>EEPROM memory has been cleared</h1><br> 
-				<p>Please give the trolley 2-3 mins to reboot</p>
+					<h1>EEPROM memory has been cleared</h1><br> 
+					<p>Please give the trolley 2-3 mins to reboot</p>
 				</body>
-			<!--<br> <a href = '/'><button>Back</button></a>-->
 			</center>
-		</html>
-
+	</html>
 		)====="; 
 
 
 	const char inputnum[] PROGMEM = R"=====(
 	<!DOCTYPE html>
-	<html>
-	  <head>
-	  <style>
-		body {background-color: LIGHTPINK;}
-	  </style>
-		<script> 
-			function al(){
-				alert("The mDNS name has been changed \n Please give the trolley 2-3 mins to reboot");
-				
-			}
-		</script>
-	  </head>
-			<body>
-			<center>
-				<h2>Trolley Number Input</h2>
-				<p>Input the name of the iTrolley <br><br>
-					This will change the mDNS name of the trolley
-				</p>
-					<form>
-						Enter The Trolley Number:
-						<input type="text" name= "trolleynumber" size = "12" placeholder = "itrolley" maxlength = "12">
-						<br><br>
-						<input type= "submit" onclick = "al()">
-					</form>
-				<br><a href="/memclear"><button>Memory Clear</button></a>
-			</center>
-			</body>
-	</html>
+  <html>
+    <head>
+      <style>
+        body {background-color: LIGHTPINK;}
+      </style>
+        <script type = "text/javascript"> 
+          function al(){
+          let v1 = document.getElementById("hostname").value;
+          alert("The mDNS name has been changed to: \n" + v1 + "\nPlease give 2-3 mins to reboot the system ");
+          window.open("http://" + v1 + ".local/")
+          }
+        </script>
+  </head>
+    <body>
+      <center>
+        <h2>Trolley Number Input</h2>
+          <p>Input the name of the iTrolley <br>This will change the mDNS name of the trolley</p>
+            <form>
+              Enter The Trolley Number:
+              <input type="text" name= "trolleynumber" size = "12" placeholder = "itrolley" maxlength = "12" id = "hostname">
+              <br><br>
+              <input type = "submit" value = "Submit" onclick = "al()">
+            </form>
+          <br><a href="/memclear"><button>Memory Clear</button></a>
+      </center>
+    </body>
+  </html>
 	)=====";
 
 

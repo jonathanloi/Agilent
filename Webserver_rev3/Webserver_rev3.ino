@@ -78,7 +78,7 @@ void memClear(){
   EEPROM.put(1,0);
   EEPROM.commit();
   Serial.println("EEPROM memory has been reset");
-  delay(2000);
+  delay(10000);
   ESP.restart();
   }
 
