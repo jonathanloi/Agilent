@@ -26,12 +26,13 @@
 			  body { background-color: lightpink;}
 			</style>
 		  </head>
-     <center>
-			<body>
-			  <h1>EEPROM memory has been cleared</h1><br> 
-			</body>
-		  <!--<br> <a href = '/'><button>Back</button></a>-->
-      </center>
+			<center>
+				<body>
+				<h1>EEPROM memory has been cleared</h1><br> 
+				<p>Please give the trolley 2-3 mins to reboot</p>
+				</body>
+			<!--<br> <a href = '/'><button>Back</button></a>-->
+			</center>
 		</html>
 
 		)====="; 
@@ -44,27 +45,28 @@
 	  <style>
 		body {background-color: LIGHTPINK;}
 	  </style>
-      <script> 
-        function con(){
-        alert("The name has been changed ");
-        }
-      </script>
+		<script> 
+			function al(){
+				alert("The mDNS name has been changed \n Please give the trolley 2-3 mins to reboot");
+				
+			}
+		</script>
 	  </head>
-	<body>
-		<center>
-	  <h2>Trolley Number Input</h2>
-		<p>Input the number of the iTrolley e.g. itrolly2<br>
-		   This will change the mDNS value for the trolley
-		</p>
-	  <form>
-		Enter The Trolley Number:
-		<input type="text" name= "trolleynumber" >
-		<br><br>
-		<input type= "submit" onclick = "con()">
-	  </form>
-   <br><a href="/memclear"><button>Memory Clear</button></a>
-		</center>
-	</body>
+			<body>
+			<center>
+				<h2>Trolley Number Input</h2>
+				<p>Input the name of the iTrolley <br><br>
+					This will change the mDNS name of the trolley
+				</p>
+					<form>
+						Enter The Trolley Number:
+						<input type="text" name= "trolleynumber" size = "12" placeholder = "itrolley" maxlength = "12">
+						<br><br>
+						<input type= "submit" onclick = "al()">
+					</form>
+				<br><a href="/memclear"><button>Memory Clear</button></a>
+			</center>
+			</body>
 	</html>
 	)=====";
 
