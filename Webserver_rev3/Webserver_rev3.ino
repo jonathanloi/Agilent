@@ -105,7 +105,7 @@ void setup() {
   wificonnect();
 
 //if there is no input on the html form, this will run
-  if (_hostname == ""){
+  if (_hostname == "" || _hostname == "itrolley"){
     if (MDNS.begin("itrolley")) {   //sets the mDNS default name, connect with "itrolley.local"
     Serial.println("1) MDNS responder started: ");    //print when successfully started
     Serial.println("itrolley");
