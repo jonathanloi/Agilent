@@ -82,6 +82,11 @@ void memClear(){
   ESP.restart();
   }
 
+//html for menu page
+void menu(){
+  String s = Menu;
+  server.send(200,"text/html",s);
+}
 
 //html for the error page
 void handleNotFound(){
@@ -105,8 +110,9 @@ void setup() {
     Serial.println("1) MDNS responder started: ");    //print when successfully started
     Serial.println("itrolley");
   }
-  
-    server.on("/",input_num); 
+
+    server.on("/",menu); 
+    server.on("/input",input_num); 
     server.on("/memclear",memClear); 
     server.onNotFound(handleNotFound);
     server.begin();
@@ -119,7 +125,9 @@ void setup() {
     Serial.println("2) MDNS responder started:");   //print when successfully started
     Serial.println(host_name);    //print the mDNS name
     }
-    server.on("/",input_num);
+    
+    server.on("/",menu); 
+    server.on("/input",input_num);
     server.on("/memclear",memClear); 
     server.onNotFound(handleNotFound);
     server.begin();

@@ -1,34 +1,35 @@
-/*const char MAIN_page[] PROGMEM = R"=====(
+const char Menu[] PROGMEM = R"=====(
 <!DOCTYPE html>
 <html>
   <head>
     <style>
-      body {background-color: plum;}
+      body {background-color: rgb(238, 118, 232);}
     </style>
   </head>
 
 <body>
   <center>
-    <h1>This is the Web Server for iTrolley!</h1>
-    <p>This is trolley number zero</p>
-      <a href = "/input"><button>Input</button></a>
+    <h1>iTrolley Menu</h1>
+    <p>Please select what you would like to do</p>
+    <a href = "/input"><button>Configure mDNS</button></a>
+    <a href = "/sensor"></a><button>Monitor Sensors</button></a>
+    
   </center>
 </body>
 </html>
 )=====";
 
-*/
 const char mem_clear[] PROGMEM = R"=====(
 <!DOCTYPE html>
 	<html>
 		<head>
 			<style>
-			body { background-color: lightpink;}
+			body { background-color: rgb(238, 118, 232);}
 			</style>
 				<script>
 					setTimeout(function(){
 						window.open("http://itrolley.local/");
-					},3000);
+					},2000);
 				</script>
 		</head>
 			<center>
@@ -46,14 +47,17 @@ const char mem_clear[] PROGMEM = R"=====(
   <html>
     <head>
       <style>
-        body {background-color: LIGHTPINK;}
+        body {background-color: rgb(238, 118, 232);}
       </style>
         <script type = "text/javascript"> 
           function al(){
           let v1 = document.getElementById("hostname").value;
-          alert("The mDNS name has been changed to: \n" + v1 + "\nPlease give 2-3 mins to reboot the system ");
-          window.open("http://" + v1 + ".local/")
-          }
+        if (v1 == "") {}
+        else {
+            alert("The mDNS name has been changed to: \n" + v1 + "\nPlease give 2-3 mins to reboot the system ");
+            window.open("http://" + v1 + ".local/")
+        }
+        }
         </script>
   </head>
     <body>
@@ -61,12 +65,13 @@ const char mem_clear[] PROGMEM = R"=====(
         <h2>Trolley Number Input</h2>
           <p>Input the name of the iTrolley <br>This will change the mDNS name of the trolley</p>
             <form>
-              Enter The Trolley Number:
+              Enter The Trolley Name:
               <input type="text" name= "trolleynumber" size = "12" placeholder = "itrolley" maxlength = "12" id = "hostname">
               <br><br>
               <input type = "submit" value = "Submit" onclick = "al()">
             </form>
           <br><a href="/memclear"><button>Memory Clear</button></a>
+        <a href="/"><button>Back</button></a>
       </center>
     </body>
   </html>
