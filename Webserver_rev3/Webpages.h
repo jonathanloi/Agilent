@@ -52,8 +52,7 @@ const char mem_clear[] PROGMEM = R"=====(
         <script type = "text/javascript"> 
           function al(){
           let v1 = document.getElementById("hostname").value;
-        if (v1 == "") {}
-        else {
+        if (v1 != "" && v1 != "itrolley") {
             alert("The mDNS name has been changed to: \n" + v1 + "\nPlease give 2-3 mins to reboot the system ");
             window.open("http://" + v1 + ".local/")
         }
