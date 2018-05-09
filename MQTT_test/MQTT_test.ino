@@ -1,65 +1,102 @@
+// This example uses an Adafruit Huzzah ESP8266
+// to connect to shiftr.io.
+//
+// You can check on your device after a successful
+// connection here: https://shiftr.io/try.
+//
+// by Joël Gähwiler
+// https://github.com/256dpi/arduino-mqtt
+
 #include <ESP8266WiFi.h>
-#include <PubSubClient.h>
-#include <PubSubClientTools.h>
+#include <MQTT.h>
+extern "C" {
+  #include "user_interface.h"
+  #include "wpa2_enterprise.h"
+}
 
-#include <Thread.h>             // https://github.com/ivanseidel/ArduinoThread
-#include <ThreadController.h>
+static const char* ssid = "spark";
+static const char* username = "jonatloi";
+static const char* password = "Jljon1999!";
 
-#define WIFI_SSID "JON"
-#define WIFI_PASS "jljon1999"
-#define MQTT_SERVER "broker.mqtt-dashboard.com"
 
-WiFiClient espClient;
-PubSubClient client(MQTT_SERVER, 1883, espClient);
-PubSubClientTools mqtt(client);
+WiFiClient net;
+MQTTClient client;
 
-ThreadController threadControl = ThreadController();
-Thread thread = Thread();
+unsigned long lastMillis = 0;
 
-int value = 0;
-String s = "";
+void wificonnect(){
+   wifi_set_opmode(STATION_MODE);
 
-void setup() {
-  Serial.begin(115200);
+  struct station_config wifi_config;
 
-  // Connect to WiFi
-  Serial.print(s+"Connecting to WiFi: "+WIFI_SSID+" ");
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  memset(&wifi_config, 0, sizeof(wifi_config));
+  strcpy((char*)wifi_config.ssid, ssid);
+
+  wifi_station_set_config(&wifi_config);
+
+  wifi_station_clear_cert_key();
+  wifi_station_clear_enterprise_ca_cert();
+
+  wifi_station_set_wpa2_enterprise_auth(1);
+  wifi_station_set_enterprise_username((uint8*)username, strlen(username));
+  wifi_station_set_enterprise_password((uint8*)password, strlen(password));
+
+  wifi_station_connect();
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println(s+" connected with IP: "+WiFi.localIP());
-
-  // Connect to MQTT
-  Serial.print(s+"Connecting to MQTT: "+MQTT_SERVER+" ... ");
-  if (client.connect("ESP8266Client")) {
-    Serial.println("connected");
-
-    mqtt.subscribe("test/inTopic1", topic1_subscriber);
-    mqtt.subscribe("test/inTopic2", topic2_subscriber);
-  } else {
-    Serial.println(s+"failed, rc="+client.state());
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+  
+  }
+void connect() {
+  Serial.print("checking wifi...");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(1000);
   }
 
-  // Enable Thread
-  thread.onRun(publisher);
-  thread.setInterval(2000);
-  threadControl.add(&thread);
+  Serial.print("\nconnecting...");
+  while (!client.connect("esp")) {
+    Serial.print(".");
+    delay(1000);
+  }
+
+  Serial.println("\nconnected!");
+  client.subscribe("/hello");
+  // client.unsubscribe("/hello");
+}
+
+void messageReceived(String &topic, String &payload) {
+  Serial.println("incoming: " + topic + " - " + payload);
+}
+
+void setup() {
+  Serial.begin(115200);
+  wificonnect();
+
+  // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
+  // You need to set the IP address directly.
+  client.begin("127.0.0.1", net);
+  client.onMessage(messageReceived);
+
+  connect();
 }
 
 void loop() {
   client.loop();
-  threadControl.run();
-}
+  delay(10);  // <- fixes some issues with WiFi stability
 
-void publisher() {
-  ++value;
-  mqtt.publish("test/outTopic", s+"hello world "+value);
-}
-void topic1_subscriber(String topic, String message) {
-  Serial.println(s+"Message arrived in function 1 ["+topic+"] "+message);
-}
-void topic2_subscriber(String topic, String message) {
-  Serial.println(s+"Message arrived in function 2 ["+topic+"] "+message);
+  if (!client.connected()) {
+    connect();
+  }
+
+  // publish a message roughly every second.
+  if (millis() - lastMillis > 1000) {
+    lastMillis = millis();
+    client.publish("/hello", "world");
+  }
 }
