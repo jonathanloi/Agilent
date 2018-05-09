@@ -42,6 +42,8 @@ void wificonnect() {
   wifi_station_set_enterprise_password((uint8*)password, strlen(password));
 
   wifi_station_connect();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");

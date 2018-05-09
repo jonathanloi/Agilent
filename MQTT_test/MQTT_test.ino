@@ -25,12 +25,18 @@
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+extern "C" {
+  #include "user_interface.h"
+  #include "wpa2_enterprise.h"
+}
 
 // Update these with values suitable for your network.
 
-const char* ssid = "JON";
-const char* password = "jljon1999";
-const char* mqtt_server = "192.168.43.142";
+static const char* ssid = "spark";
+static const char* username = "jonatloi";
+static const char* password = "Jljon1999!";
+
+const char* mqtt_server = "10.56.70.100";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -50,17 +56,29 @@ void setup_wifi() {
 
   delay(10);
   // We start by connecting to a WiFi network
-  Serial.println();
+   wifi_set_opmode(STATION_MODE);
+
+  struct station_config wifi_config;
+
+  memset(&wifi_config, 0, sizeof(wifi_config));
+  strcpy((char*)wifi_config.ssid, ssid);
+
+  wifi_station_set_config(&wifi_config);
+
+  wifi_station_clear_cert_key();
+  wifi_station_clear_enterprise_ca_cert();
+
+  wifi_station_set_wpa2_enterprise_auth(1);
+  wifi_station_set_enterprise_username((uint8*)username, strlen(username));
+  wifi_station_set_enterprise_password((uint8*)password, strlen(password));
+
+  wifi_station_connect();
   Serial.print("Connecting to ");
   Serial.println(ssid);
-
-  WiFi.begin(ssid, password);
-
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-
   Serial.println("");
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
@@ -113,7 +131,7 @@ void loop() {
     reconnect();
   }
   client.loop();
-
+  delay(10);
   long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
