@@ -30,7 +30,7 @@
 
 const char* ssid = "JON";
 const char* password = "jljon1999";
-const char* mqtt_server = "test.mosquitto.org";
+const char* mqtt_server = "192.168.43.142";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -97,7 +97,7 @@ void reconnect() {
       // Once connected, publish an announcement...
       client.publish("outTopic", "hello world");
       // ... and resubscribe
-      client.subscribe("temp/jonatloi");
+      client.subscribe("inTopic");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -113,7 +113,6 @@ void loop() {
     reconnect();
   }
   client.loop();
-  delay(10);
 
   long now = millis();
   if (now - lastMsg > 2000) {
@@ -122,6 +121,6 @@ void loop() {
     snprintf (msg, 75, "hello world #%ld", value);
     Serial.print("Publish message: ");
     Serial.println(msg);
-    client.publish("temp/12345321", msg);
+    client.publish("outTopic", msg);
   }
 }
