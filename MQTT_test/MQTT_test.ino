@@ -36,7 +36,7 @@ static const char* ssid = "spark";
 static const char* username = "jonatloi";
 static const char* password = "Jljon1999!";
 
-const char* mqtt_server = "10.56.70.100";
+const char* mqtt_server = "10.72.36.162";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -57,22 +57,17 @@ void setup_wifi() {
   delay(10);
   // We start by connecting to a WiFi network
    wifi_set_opmode(STATION_MODE);
-
-  struct station_config wifi_config;
-
-  memset(&wifi_config, 0, sizeof(wifi_config));
-  strcpy((char*)wifi_config.ssid, ssid);
-
-  wifi_station_set_config(&wifi_config);
-
-  wifi_station_clear_cert_key();
-  wifi_station_clear_enterprise_ca_cert();
-
-  wifi_station_set_wpa2_enterprise_auth(1);
-  wifi_station_set_enterprise_username((uint8*)username, strlen(username));
-  wifi_station_set_enterprise_password((uint8*)password, strlen(password));
-
-  wifi_station_connect();
+    struct station_config wifi_config;
+    memset(&wifi_config, 0, sizeof(wifi_config));
+    strcpy((char*)wifi_config.ssid, ssid);
+    wifi_station_set_config(&wifi_config);
+    wifi_station_clear_cert_key();
+    wifi_station_clear_enterprise_ca_cert();
+    wifi_station_set_wpa2_enterprise_auth(1);
+    wifi_station_set_enterprise_identity((uint8*)username, strlen(username));
+    wifi_station_set_enterprise_username((uint8*)username, strlen(username));
+    wifi_station_set_enterprise_password((uint8*)password, strlen(password));
+    wifi_station_connect();
   Serial.print("Connecting to ");
   Serial.println(ssid);
   while (WiFi.status() != WL_CONNECTED) {
@@ -129,6 +124,7 @@ void loop() {
 
   if (!client.connected()) {
     reconnect();
+    delay(10);
   }
   client.loop();
   delay(10);
