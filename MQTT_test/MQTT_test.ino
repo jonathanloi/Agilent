@@ -1,21 +1,21 @@
 /*
- Basic ESP8266 MQTT example
+  Basic ESP8266 MQTT example
 
- This sketch demonstrates the capabilities of the pubsub library in combination
- with the ESP8266 board/library.
+  This sketch demonstrates the capabilities of the pubsub library in combination
+  with the ESP8266 board/library.
 
- It connects to an MQTT server then:
+  It connects to an MQTT server then:
   - publishes "hello world" to the topic "outTopic" every two seconds
   - subscribes to the topic "inTopic", printing out any messages
     it receives. NB - it assumes the received payloads are strings not binary
   - If the first character of the topic "inTopic" is an 1, switch ON the ESP Led,
     else switch it off
 
- It will reconnect to the server if the connection is lost using a blocking
- reconnect function. See the 'mqtt_reconnect_nonblocking' example for how to
- achieve the same result without blocking the main loop.
+  It will reconnect to the server if the connection is lost using a blocking
+  reconnect function. See the 'mqtt_reconnect_nonblocking' example for how to
+  achieve the same result without blocking the main loop.
 
- To install the ESP8266 board, (using Arduino 1.6.4+):
+  To install the ESP8266 board, (using Arduino 1.6.4+):
   - Add the following 3rd party board manager under "File -> Preferences -> Additional Boards Manager URLs":
        http://arduino.esp8266.com/stable/package_esp8266com_index.json
   - Open the "Tools -> Board -> Board Manager" and click install for the ESP8266"
@@ -26,8 +26,8 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 extern "C" {
-  #include "user_interface.h"
-  #include "wpa2_enterprise.h"
+#include "user_interface.h"
+#include "wpa2_enterprise.h"
 }
 
 // Update these with values suitable for your network.
@@ -36,7 +36,7 @@ static const char* ssid = "spark";
 static const char* username = "jonatloi";
 static const char* password = "Jljon1999!";
 
-const char* mqtt_server = "10.72.36.162";
+const char* mqtt_server = "10.56.70.100";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -56,18 +56,18 @@ void setup_wifi() {
 
   delay(10);
   // We start by connecting to a WiFi network
-   wifi_set_opmode(STATION_MODE);
-    struct station_config wifi_config;
-    memset(&wifi_config, 0, sizeof(wifi_config));
-    strcpy((char*)wifi_config.ssid, ssid);
-    wifi_station_set_config(&wifi_config);
-    wifi_station_clear_cert_key();
-    wifi_station_clear_enterprise_ca_cert();
-    wifi_station_set_wpa2_enterprise_auth(1);
-    wifi_station_set_enterprise_identity((uint8*)username, strlen(username));
-    wifi_station_set_enterprise_username((uint8*)username, strlen(username));
-    wifi_station_set_enterprise_password((uint8*)password, strlen(password));
-    wifi_station_connect();
+  wifi_set_opmode(STATION_MODE);
+  struct station_config wifi_config;
+  memset(&wifi_config, 0, sizeof(wifi_config));
+  strcpy((char*)wifi_config.ssid, ssid);
+  wifi_station_set_config(&wifi_config);
+  wifi_station_clear_cert_key();
+  wifi_station_clear_enterprise_ca_cert();
+  wifi_station_set_wpa2_enterprise_auth(1);
+  wifi_station_set_enterprise_identity((uint8*)username, strlen(username));
+  wifi_station_set_enterprise_username((uint8*)username, strlen(username));
+  wifi_station_set_enterprise_password((uint8*)password, strlen(password));
+  wifi_station_connect();
   Serial.print("Connecting to ");
   Serial.println(ssid);
   while (WiFi.status() != WL_CONNECTED) {
