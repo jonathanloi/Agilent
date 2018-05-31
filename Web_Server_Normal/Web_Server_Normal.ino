@@ -6,8 +6,8 @@
 #include "Webpages.h"
 
 //defines the WPA2-Enterprise details
-const char* ssid = "JON";
-const char* password = "jljon1999";
+const char* ssid = "5CG6182HKM 0819";
+const char* password = "6oM47!92";
 
 ESP8266WebServer server(80);
 const int led = LED_BUILTIN;

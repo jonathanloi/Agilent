@@ -1,4 +1,4 @@
-const char Menu[] PROGMEM = R"=====(
+/*const char Menu[] PROGMEM = R"=====(
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,7 +17,7 @@ const char Menu[] PROGMEM = R"=====(
   </center>
 </body>
 </html>
-)=====";
+)=====";*/
 
 const char mem_clear[] PROGMEM = R"=====(
 <!DOCTYPE html>
@@ -47,7 +47,18 @@ const char mem_clear[] PROGMEM = R"=====(
   <html>
     <head>
       <style>
-        body {background-color: rgb(238, 118, 232);}
+        h1 {
+            background-color: rgb(5, 187, 187);
+            font-family: 'Courier New', Courier, monospace;
+            color: black;
+            padding: 30px;
+            text-align: center;
+          }
+        .bod{
+            font-family: 'Courier New', Courier, monospace;
+            color: black; 
+            text-align: center;
+        }
       </style>
         <script type = "text/javascript"> 
           function al(){
@@ -59,19 +70,17 @@ const char mem_clear[] PROGMEM = R"=====(
         }
         </script>
   </head>
-    <body>
-      <center>
-        <h2>Trolley Number Input</h2>
+    <body class="bod">
+        <h1>Trolley Name Input</h1>
           <p>Input the name of the iTrolley <br>This will change the mDNS name of the trolley</p>
             <form>
               Enter The Trolley Name:
               <input type="text" name= "trolleynumber" size = "12" placeholder = "itrolley" maxlength = "12" id = "hostname">
               <br><br>
-              <input type = "submit" value = "Submit" onclick = "al()">
+              <input type = "submit" value = "Submit" onclick = "al()" class="bod">
             </form>
-          <br><a href="/memclear"><button>Memory Clear</button></a>
-        <a href="/"><button>Back</button></a>
-      </center>
+          <br><a href="/memclear"><button class="bod">Memory Clear</button></a>
+        <a href="/"><button class="bod">Back</button></a>
     </body>
   </html>
 	)=====";
@@ -128,3 +137,90 @@ const char mem_clear[] PROGMEM = R"=====(
 				</body>
 				</html>
 				)=====";
+
+const char Menu[] PROGMEM = R"=====(
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <style>
+        table{
+            border: 2px solid black;
+            border-collapse: collapse;
+        }
+        .td {
+            padding: 5px;
+            width: 250px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .h1 {
+            background-color: rgb(5, 187, 187);
+            font-family: 'Courier New', Courier, monospace;
+            color: black;
+            padding: 30px;
+            text-align: center;
+        }
+        .val {
+            padding: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            width: 90px;
+            text-align: center;
+
+        }
+    </style>
+    
+</head>
+<body>
+<h1 class="h1">iTrolley Overview</h1>
+<table class="border">
+  <tr>
+    <td class="td">Assigned Serial No. : </td>
+    <td class="val">1 </td>
+  </tr>
+  <tr>
+    <td class="td">Instrument's Presence  :</td>
+    <td class="val">3 </td>
+  </tr>
+  <tr>
+    <td class="td">AC Current  :</td>
+    <td class="val"> 5</td>
+  </tr>
+  <tr>
+        <td class="td">Location  :</td>
+        <td class="val">2 </td>
+      </tr>
+     <tr>
+        <td class="td">Bay  :</td>
+        <td class="val">3 </td>
+    </tr>
+</table>
+    <canvas id="myChart"></canvas>
+    <script>
+    var ctx = document.getElementById('myChart').getContext("2d");
+let chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+    </script>
+</body>
+</html>
+)=====";
