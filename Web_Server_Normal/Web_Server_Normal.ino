@@ -36,8 +36,8 @@ void wificonnect() {
 
 
 // html data for the main input page
-void input_num() {
-  String s = inputnum;
+void configure_name() {
+  String s = configureName;
   String _hostname = EEPROM.get(1, arrayTostore);
   server.send(200, "text/html", s);
   if (server.arg(0) != "" && _hostname != server.arg(0)) {
@@ -94,7 +94,7 @@ void setup() {
     }
 
     server.on("/", menu);
-    server.on("/input", input_num);
+    //server.on("/configure", configure_name);
     server.on("/memclear", memClear);
     server.onNotFound(handleNotFound);
     server.begin();
@@ -109,7 +109,7 @@ void setup() {
     }
 
     server.on("/", menu);
-    server.on("/input", input_num);
+    //server.on("/configure", configure_name);
     server.on("/memclear", memClear);
     server.onNotFound(handleNotFound);
     server.begin();
