@@ -6,7 +6,7 @@
 #include "Webpages.h"
 
 //defines the WPA2-Enterprise details
-const char* ssid = "5CG6182HKM 0819";
+const char* ssid = "abcd";
 const char* password = "6oM47!92";
 
 ESP8266WebServer server(80);
@@ -66,8 +66,13 @@ void memClear() {
 
 //html for menu page
 void menu() {
+  String test = [100, 50, 5, 2, 20, 70, 45];
   String s = Menu;
-  server.send(200, "text/html", s);
+  String ss = s;
+  ss.replace("[10, 20, 5, 2, 20, 30, 45]",test);
+  Serial.println(s);
+  Serial.println(ss);
+  server.send(200, "text/html", ss);
 }
 
 //html for the error page
