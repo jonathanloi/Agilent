@@ -7,11 +7,13 @@ void setup () {
   WiFi.begin("abcd", "6oM47!92");
 
   while (WiFi.status() != WL_CONNECTED) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(1000);
-    digitalWrite(LED_BUILTIN, LOW);
+    
+    Serial.println("Connecting...");
+    delay(2000);
+    
   }
-  digitalWrite(LED_BUILTIN, HIGH);
+  Serial.println("Connected!");
+ 
 }
 void loop() {
 
@@ -36,8 +38,8 @@ void loop() {
       int testArray[count];
       for (int i = 0; i < count ; i++) {
         String part = getValue(payload, '}', i);
-        int test = part.lastIndexOf(":") + 1;
-        testArray[i] = part.substring(test).toInt();
+        int dataPos = part.lastIndexOf(":") + 1;
+        testArray[i] = part.substring(dataPos).toInt();
         Serial.println(testArray[i]);
         chart += testArray[i];
         chart += ", ";
@@ -45,8 +47,8 @@ void loop() {
       chart = chart.substring(0,chart.length() - 2);
       chart += "]";
       Serial.println(chart);
-    } else Serial.println("An error ocurred");
-
+    } 
+    else Serial.println("An error ocurred");
     http.end();   //Close connection
 
   }
