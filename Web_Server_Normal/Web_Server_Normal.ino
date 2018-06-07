@@ -4,14 +4,19 @@
 #include <ESP8266mDNS.h>
 #include <EEPROM.h>
 #include <ESP8266HTTPClient.h>
+#include <ArduinoJson.h>
+#include <DHT.h>
+#include <RBD_Timer.h>
 #include "Webpages.h"
 
 //defines the WPA2-Enterprise details
 const char* ssid = "abcd";
 const char* password = "6oM47!92";
 
+DHT dht (13, DHT11);
 ESP8266WebServer server(80);
-const int led = LED_BUILTIN;
+RBD::Timer temptimer(15000);
+RBD::Timer charttemptimer(30000);
 
 //define global variables
 String temp = "";
@@ -61,7 +66,6 @@ void memClear() {
   EEPROM.put(1, 0);
   EEPROM.commit();
   Serial.println("EEPROM memory has been reset");
-  delay(7000);
   ESP.restart();
 }
 
@@ -69,6 +73,7 @@ void memClear() {
 void menu() {
   String s = Menu;
   String ss = s;
+  chartt = httpGet();
   ss.replace("[0, 0, 0, 0, 0, 0, 0]", chartt);
   //Serial.println(s);
   //Serial.println(ss);
@@ -80,6 +85,7 @@ void handleNotFound() {
   String s = Error;
   server.send(404, "text/html", s);
 }
+
 
 String httpGet() {
 
@@ -98,21 +104,20 @@ String httpGet() {
         if (payload.substring(i, i + 1) == "}")
           count++;
       }
-      Serial.println(count);
+      //Serial.println(count);
       //Serial.println(payload);             //Print the response payload
-      //Serial.println(payload.substring(105,108));
       int testArray[count];
       for (int i = 0; i < count ; i++) {
         String part = getValue(payload, '}', i);
         int dataPos = part.lastIndexOf(":") + 1;
         testArray[i] = part.substring(dataPos).toInt();
-        Serial.println(testArray[i]);
+        //Serial.println(testArray[i]);
         chart += testArray[i];
         chart += ", ";
       }
       chart = chart.substring(0, chart.length() - 2);
       chart += "]";
-      Serial.println(chart);
+      //Serial.println(chart);
       return chart;
     }
     else Serial.println("An error ocurred");
@@ -121,6 +126,7 @@ String httpGet() {
   }
   //delay(10000);    //Send a request every 10 seconds
 }
+
 
 String getValue(String data, char separator, int index) {
 
@@ -140,15 +146,57 @@ String getValue(String data, char separator, int index) {
 }
 
 
+void postTempValue(float temperature) {
+  
+  if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
+ 
+    StaticJsonBuffer<300> JSONbuffer;   //Declaring static JSON buffer
+    JsonObject& JSONencoder = JSONbuffer.createObject(); 
+ 
+    JSONencoder["name"] = "Temperature";
+    JSONencoder["temperature"] = temperature;
+    //JsonArray& values = JSONencoder.createNestedArray("temperature"); //JSON array
+    //values.add(20); //Add value to array
+    //values.add(21); //Add value to array
+    //values.add(23); //Add value to array
+ 
+    char JSONmessageBuffer[300];
+    JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
+    Serial.println(JSONmessageBuffer);
+ 
+    HTTPClient http;    //Declare object of class HTTPClient
+ 
+    http.begin("http://sgh721qbmq:1337/itrolley");      //Specify request destination
+    http.addHeader("Content-Type", "application/json");  //Specify content-type header
+ 
+    int httpCode = http.POST(JSONmessageBuffer);   //Send the request
+    String payload = http.getString();                                        //Get the response payload
+
+    Serial.println(httpCode);   //Print HTTP return code
+    Serial.println(payload);    //Print request response payload 
+ 
+    http.end();  //Close connection
+    }
+    else {
+    Serial.println("Error in WiFi connection");
+  }
+ 
+  //delay(10000);  //Send a request every 30 seconds
+ 
+}
+
+
 void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   EEPROM.begin(512);
   String _hostname = EEPROM.get(1, arrayTostore);  //set the string _hostname to the stored value in eeprom
   char* host_name = EEPROM.get(1, arrayTostore);
-  Serial.println(_hostname.length());
+  temptimer.restart();
+  charttemptimer.restart();
+  //Serial.println(_hostname.length());
   wificonnect();
-
+  chartt = httpGet();
   //if there is no input on the html form, this will run
   if (_hostname == "" || _hostname == "itrolley") {
     if (MDNS.begin("itrolley")) {   //sets the mDNS default name, connect with "itrolley.local"
@@ -182,8 +230,10 @@ void setup() {
 }
 
 void loop() {
-  
+
+//  if (temptimer.onRestart()){
+//  postTempValue(dht.readTemperature());
+//  }
   server.handleClient();
-  chartt = httpGet();
   
 }
