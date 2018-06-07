@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<Title>iTrolley</Title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Page Title</title>
@@ -8,55 +9,53 @@
 <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <style>
-    .table{
-        border: 2px solid black;
-        border-collapse: collapse;
-        float: left;
-        margin-left: 10px;
-        margin-top: 5px;
+
+.table{
+  border: 2px solid black;
+  border-collapse: collapse;
+  float:left;  
+  margin-left: 10px;
+  margin-top: 2px;
     }
-    .td {
-        padding: 5px;
-        width: 250px;
-        font-family: 'Courier New', Courier, monospace;
+.td {
+  padding: 5px;
+  width: 250px;
+  font-family: 'Courier New', Courier, monospace;
     }
-    .h1 {
-        background-color: rgb(5, 187, 187);
-        font-family: 'Courier New', Courier, monospace;
-        color: black;
-        padding: 25px;
-        text-align: center;
+.h1 {
+  background-color: rgb(5, 187, 187);
+  font-family: 'Courier New', Courier, monospace;
+  color: black;
+  padding: 25px;
+  text-align: center;
     }
-    .val {
-        padding: 5px;
-        font-family: 'Courier New', Courier, monospace;
-        width: 90px;
-        text-align: center;
+.val {
+  padding: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  width: 90px;
+  text-align: center;
 
     }
-    .text {
-        font-family: 'Courier New', Courier, monospace;
-        background-color: #555;
-        color: white;
-        float: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        padding: 10px;
-        font-size: 20px;
-    }
-    .text:hover {
-        background-color: #777;
-    }
+.text {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #555;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 5px;
+}
+.text:hover {
+  background-color: #777;
+}
 
-    </style>
+</style>
     
 </head>
 <body>
-<button class="text" onclick="google.com">iTrolley</button>
-<h1 class="h1">iTrolley Overview</h1>
+<h1 class="h1"><a href="/configure" class="text">iTrolley</a> Overview</h1>
 <div class="table">
-    <table>
+<table>
   <tr>
     <td class="td">Assigned Serial No. : </td>
     <td class="val">1 </td>
@@ -70,42 +69,75 @@
     <td class="val"> 5</td>
   </tr>
   <tr>
-        <td class="td">Location  :</td>
-        <td class="val">2 </td>
-      </tr>
-     <tr>
-        <td class="td">Bay  :</td>
-        <td class="val">3 </td>
-    </tr>
+    <td class="td">Location  :</td>
+    <td class="val">2 </td>
+  </tr>
+  <tr>
+    <td class="td">Bay  :</td>
+    <td class="val">3 </td>
+  </tr>
 </table>
 </div>
 <div class="table">
-    <table>
-        <tr>
-          <td class="td">Assigned Serial No. : </td>
-          <td class="val">1 </td>
-        </tr>
-        <tr>
-          <td class="td">Instrument's Presence  :</td>
-          <td class="val">3 </td>
-        </tr>
-        <tr>
-          <td class="td">AC Current  :</td>
-          <td class="val"> 5</td>
-        </tr>
-        <tr>
-              <td class="td">Location  :</td>
-              <td class="val">2 </td>
-            </tr>
-           <tr>
-              <td class="td">Bay  :</td>
-              <td class="val">3 </td>
-          </tr>
-      </table>
-    </div>
-        <div style="height: 750px";>
-        <canvas id="myChart"></canvas>
-        <script src="js/main.js"></script>
-        </div>  
+<table>
+  <tr>
+    <td class="td">Assigned Serial No. : </td>
+    <td class="val">1 </td>
+  </tr>
+  <tr>
+    <td class="td">Instrument's Presence  :</td>
+    <td class="val">3 </td>
+  </tr>
+  <tr>
+    <td class="td">AC Current  :</td>
+    <td class="val"> 5</td>
+  </tr>
+  <tr>
+    <td class="td">Location  :</td>
+    <td class="val">2 </td>
+  </tr>
+  <tr>
+    <td class="td">Bay  :</td>
+    <td class="val">3 </td>
+  </tr>
+</table>
+</div>
+<canvas id="myChart"></canvas>
+<script>
+    var ctx = document.getElementById('myChart').getContext("2d");
+    let chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+    labels: [1750,1800,1850,1900,1950,1999,2050],
+    datasets: [{ 
+        data: [0, 0, 0, 0, 0, 0, 0],
+        label: "Temperature",
+        borderColor: "#3e95cd",
+        backgroundColor: "#3e95cd",
+        fill: false
+      }, { 
+        data: [1, 1, 1, 1, 1, 1, 1],
+        label: "Current",
+        borderColor: "#8e5ea2",
+        backgroundColor: "#8e5ea2",
+        fill: false
+      }, { 
+        data: [6, 3, 2, 2, 7, 26, 82],
+        label: "North America",
+        borderColor: "#c45850",
+        backgroundColor: "#c45850",
+        fill: false
+      }
+    ]
+  },
+    
+// Configuration options go here
+options: {}
+});     
+      
+    </script>     
 </body>
-</html>
+</html> 
