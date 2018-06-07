@@ -159,15 +159,15 @@ const char Menu[] PROGMEM = R"=====(
 <title>Page Title</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 <style>
 
 .table{
   border: 2px solid black;
   border-collapse: collapse;
-  float: left;
+  float:left;  
   margin-left: 10px;
-  margin-top: 5px;
+  margin-top: 2px;
     }
 .td {
   padding: 5px;
@@ -192,12 +192,10 @@ const char Menu[] PROGMEM = R"=====(
   font-family: 'Courier New', Courier, monospace;
   background-color: #555;
   color: white;
-  float: left;
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 10px;
-  font-size: 20px;
+  padding: 5px;
 }
 .text:hover {
   background-color: #777;
@@ -207,10 +205,9 @@ const char Menu[] PROGMEM = R"=====(
     
 </head>
 <body>
-<a href="/configure"><h3 class="text">iTrolley</h3></a>
-<h1 class="h1">iTrolley Overview</h1>
+<h1 class="h1"><a href="/configure" class="text">iTrolley</a> Overview</h1>
 <div class="table">
-    <table>
+<table>
   <tr>
     <td class="td">Assigned Serial No. : </td>
     <td class="val">1 </td>
@@ -263,18 +260,30 @@ const char Menu[] PROGMEM = R"=====(
         let chart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'line',
-
         // The data for our dataset
         data: {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [{
-            label: "My First dataset",
-            fill: false,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 0, 0, 0, 0, 0, 0],
-        }]
-    },
+        labels: [1750,1800,1850,1900,1950,1999,2050],
+        datasets: [{ 
+        data: [0, 0, 0, 0, 0, 0, 0],
+        label: "Temperature",
+        borderColor: "#3e95cd",
+        backgroundColor: "#3e95cd",
+        fill: false
+      }, { 
+        data: [1, 1, 1, 1, 1, 1, 1],
+        label: "Current",
+        borderColor: "#8e5ea2",
+        backgroundColor: "#8e5ea2",
+        fill: false
+      }, { 
+        data: [6, 3, 2, 2, 7, 26, 82],
+        label: "North America",
+        borderColor: "#c45850",
+        backgroundColor: "#c45850",
+        fill: false
+      }
+    ]
+  },
     
     // Configuration options go here
     options: {}
@@ -283,5 +292,6 @@ const char Menu[] PROGMEM = R"=====(
     </script>     
 </body>
 </html> 
+
 
 )=====";
