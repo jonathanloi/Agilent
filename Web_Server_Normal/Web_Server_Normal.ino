@@ -16,14 +16,14 @@ const char* password = "6oM47!92";
 
 DHT dht (13, DHT11);
 ESP8266WebServer server(80);
-RBD::Timer temptimer(15000);
-RBD::Timer charttemptimer(30000);
+RBD::Timer temptimer(60000*10);
+
 
 //define global variables
 String temp = "";
 char arrayTostore[20];
-String chart, chartt;
-int HOUR = 3600*1000;
+String tempData, timeData;
+
 
 //Wifi connect function to connect to WPA2-Enterprise wifi signals
 void wificonnect() {
@@ -75,11 +75,11 @@ void memClear() {
 void menu() {
   String s = Menu;
   String ss = s;
-  httpTempGet();
-  httpTimeGet();
-  ss.replace("[0, 0, 0, 0, 0, 0, 0]", chart);
+  //httpTempGet();
+  httpDataGet();
+  ss.replace("[0, 0, 0, 0, 0, 0, 0]", tempData);
   delay(10);
-  ss.replace("[10,10,10,10,10,10,10]", chartt);
+  ss.replace("[10,10,10,10,10,10,10]", timeData);
   //Serial.println(s);
   //Serial.println(ss);
   server.send(200, "text/html", ss);
@@ -92,7 +92,7 @@ void handleNotFound() {
 }
 
 
-void httpTempGet() {
+/*void httpTempGet() {
 
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
@@ -100,7 +100,7 @@ void httpTempGet() {
     http.begin("http://sgh721qbmq:1337/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
 
     int httpCode = http.GET(); //Send the request
-    chart = "[";
+    tempData = "[";
 
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
@@ -117,11 +117,11 @@ void httpTempGet() {
         int dataPos = part.lastIndexOf(":") + 1;
         testArray[i] = part.substring(dataPos).toInt();
         //Serial.println(testArray[i]);
-        chart += testArray[i];
-        chart += ", ";
+        tempData += testArray[i];
+        tempData += ", ";
       }
-      chart = chart.substring(0, chart.length() - 2);
-      chart += "]";
+      tempData = tempData.substring(0, tempData.length() - 2);
+      tempData += "]";
       //Serial.println(chart);
     }
     else Serial.println("An error ocurred");
@@ -130,11 +130,10 @@ void httpTempGet() {
   }
   //delay(10000);    //Send a request every 10 seconds
 }
+*/
 
 
-
-
-void httpTimeGet() {
+void httpDataGet() {
   // put your main code here, to run repeatedly:
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
@@ -142,7 +141,8 @@ void httpTimeGet() {
     http.begin("http://sgh721qbmq:1337/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
 
     int httpCode = http.GET(); //Send the request
-    chartt = "['";
+    timeData = "['";
+    tempData = "[";
 
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
@@ -152,28 +152,37 @@ void httpTimeGet() {
           count++;
       }
       //Serial.println(count);
-      Serial.println(payload);             //Print the response payload
+      //Serial.println(payload);             //Print the response payload
       int testArray[count];
+      int testArray1[count];
       for (int i = 0; i < count ; i++) {
         String part = getValue(payload, '}', i);
-        testArray[i] = part.substring(22, 33).toInt();
+        testArray1[i] = part.substring(22, 33).toInt();
         //Serial.println(testArray[i]);
-        time_t t = testArray[i] + 28800;
-        chartt += day(t);
-        chartt += "/";
-        chartt += month(t);
-        chartt += "/";
-        chartt += year(t);
-        chartt += " ";
-        chartt += hour(t);
-        chartt += ":";
-        chartt += minute(t);
-        chartt += "','";
-      }
-      chartt = chartt.substring(0, chartt.length() - 2);
-      chartt += "]";
-      Serial.println(chartt);
+        time_t t = testArray1[i] + 28800;
+        timeData += day(t);
+        timeData += "/";
+        timeData += month(t);
+        timeData += "/";
+        timeData += year(t);
+        timeData += " ";
+        timeData += hour(t);
+        timeData += ":";
+        timeData += minute(t);
+        timeData += "','";
 
+        int dataPos = part.lastIndexOf(":") + 1;
+        testArray[i] = part.substring(dataPos).toInt();
+        //Serial.println(testArray[i]);
+        tempData += testArray[i];
+        tempData += ", ";
+      }
+      timeData = timeData.substring(0, timeData.length() - 2);
+      timeData += "]";
+      //Serial.println(timeData);
+      tempData = tempData.substring(0, tempData.length() - 2);
+      tempData += "]";
+      //Serial.println(tempData);
     }
     else Serial.println("An error ocurred");
     http.end();   //Close connection
@@ -217,7 +226,7 @@ void postTempValue(float temperature) {
  
     char JSONmessageBuffer[300];
     JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
-    Serial.println(JSONmessageBuffer);
+    //Serial.println(JSONmessageBuffer);
  
     HTTPClient http;    //Declare object of class HTTPClient
  
@@ -227,7 +236,7 @@ void postTempValue(float temperature) {
     int httpCode = http.POST(JSONmessageBuffer);   //Send the request
     String payload = http.getString();                                        //Get the response payload
 
-    Serial.println(httpCode);   //Print HTTP return code
+    //Serial.println(httpCode);   //Print HTTP return code
     Serial.println(payload);    //Print request response payload 
  
     http.end();  //Close connection
@@ -248,7 +257,7 @@ void setup() {
   String _hostname = EEPROM.get(1, arrayTostore);  //set the string _hostname to the stored value in eeprom
   char* host_name = EEPROM.get(1, arrayTostore);
   temptimer.restart();
-  charttemptimer.restart();
+  
   //Serial.println(_hostname.length());
   wificonnect();
   //if there is no input on the html form, this will run
@@ -285,9 +294,9 @@ void setup() {
 
 void loop() {
 
-//  if (temptimer.onRestart()){
-//  postTempValue(dht.readTemperature());
-//  }
+  if (temptimer.onRestart()){
+  postTempValue(dht.readTemperature());
+  }
   server.handleClient();
   
 }

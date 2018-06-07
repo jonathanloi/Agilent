@@ -202,7 +202,6 @@ const char Menu[] PROGMEM = R"=====(
 </style>
 </head>
 <body>
-<
 <h1 class="h1"><a href="/configure" class="text">iTrolley</a> Overview</h1>
 <div class="table">
 <table>
