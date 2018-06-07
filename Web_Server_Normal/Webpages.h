@@ -44,12 +44,10 @@ h1 {
   font-family: 'Courier New', Courier, monospace;
   background-color: #555;
   color: white;
-  float: left;
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 10px;
-  font-size: 20px;
+  padding: 5px;
 }
 .text:hover {
   background-color: #777;
@@ -81,9 +79,8 @@ h1 {
 </script>
 </head>
 <body>
-  <a href="/"><h3 class="text">Back</h3></a>
   <div class="bod">
-  <h1 class="h1">Configure iTrolley</h1>
+  <h1 class="h1"><a href="/" class="text">iTrolley</a> Configuration</h1>
   <p>Input the name of the iTrolley <br>This will change the mDNS name of the trolley</p>
   <form>
     Enter The Trolley Name:
@@ -154,6 +151,7 @@ const char Menu[] PROGMEM = R"=====(
 <!DOCTYPE html>
 <html>
 <head>
+<Title>iTrolley</Title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Page Title</title>
@@ -202,9 +200,9 @@ const char Menu[] PROGMEM = R"=====(
 }
 
 </style>
-    
 </head>
 <body>
+<
 <h1 class="h1"><a href="/configure" class="text">iTrolley</a> Overview</h1>
 <div class="table">
 <table>
@@ -262,7 +260,7 @@ const char Menu[] PROGMEM = R"=====(
         type: 'line',
         // The data for our dataset
         data: {
-        labels: [1750,1800,1850,1900,1950,1999,2050],
+        labels: [10,10,10,10,10,10,10],
         datasets: [{ 
         data: [0, 0, 0, 0, 0, 0, 0],
         label: "Temperature",

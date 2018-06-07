@@ -3,6 +3,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <EEPROM.h>
+#include <TimeLib.h>
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 #include <DHT.h>
@@ -21,7 +22,8 @@ RBD::Timer charttemptimer(30000);
 //define global variables
 String temp = "";
 char arrayTostore[20];
-String chartt;
+String chart, chartt;
+int HOUR = 3600*1000;
 
 //Wifi connect function to connect to WPA2-Enterprise wifi signals
 void wificonnect() {
@@ -73,8 +75,11 @@ void memClear() {
 void menu() {
   String s = Menu;
   String ss = s;
-  chartt = httpGet();
-  ss.replace("[0, 0, 0, 0, 0, 0, 0]", chartt);
+  httpTempGet();
+  httpTimeGet();
+  ss.replace("[0, 0, 0, 0, 0, 0, 0]", chart);
+  delay(10);
+  ss.replace("[10,10,10,10,10,10,10]", chartt);
   //Serial.println(s);
   //Serial.println(ss);
   server.send(200, "text/html", ss);
@@ -87,7 +92,7 @@ void handleNotFound() {
 }
 
 
-String httpGet() {
+void httpTempGet() {
 
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
@@ -95,7 +100,7 @@ String httpGet() {
     http.begin("http://sgh721qbmq:1337/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
 
     int httpCode = http.GET(); //Send the request
-    String chart = "[";
+    chart = "[";
 
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
@@ -118,7 +123,57 @@ String httpGet() {
       chart = chart.substring(0, chart.length() - 2);
       chart += "]";
       //Serial.println(chart);
-      return chart;
+    }
+    else Serial.println("An error ocurred");
+    http.end();   //Close connection
+
+  }
+  //delay(10000);    //Send a request every 10 seconds
+}
+
+
+
+
+void httpTimeGet() {
+  // put your main code here, to run repeatedly:
+  if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
+    HTTPClient http;  //Declare an object of class HTTPClient
+
+    http.begin("http://sgh721qbmq:1337/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
+
+    int httpCode = http.GET(); //Send the request
+    chartt = "['";
+
+    if (httpCode > 0) { //Check the returning code
+      String payload = http.getString();   //Get the request response payload
+      int count = 0;
+      for (int i = 0; i <= payload.length(); i++) {
+        if (payload.substring(i, i + 1) == "}")
+          count++;
+      }
+      //Serial.println(count);
+      Serial.println(payload);             //Print the response payload
+      int testArray[count];
+      for (int i = 0; i < count ; i++) {
+        String part = getValue(payload, '}', i);
+        testArray[i] = part.substring(22, 33).toInt();
+        //Serial.println(testArray[i]);
+        time_t t = testArray[i] + 28800;
+        chartt += day(t);
+        chartt += "/";
+        chartt += month(t);
+        chartt += "/";
+        chartt += year(t);
+        chartt += " ";
+        chartt += hour(t);
+        chartt += ":";
+        chartt += minute(t);
+        chartt += "','";
+      }
+      chartt = chartt.substring(0, chartt.length() - 2);
+      chartt += "]";
+      Serial.println(chartt);
+
     }
     else Serial.println("An error ocurred");
     http.end();   //Close connection
@@ -196,7 +251,6 @@ void setup() {
   charttemptimer.restart();
   //Serial.println(_hostname.length());
   wificonnect();
-  chartt = httpGet();
   //if there is no input on the html form, this will run
   if (_hostname == "" || _hostname == "itrolley") {
     if (MDNS.begin("itrolley")) {   //sets the mDNS default name, connect with "itrolley.local"
@@ -237,3 +291,5 @@ void loop() {
   server.handleClient();
   
 }
+
+
