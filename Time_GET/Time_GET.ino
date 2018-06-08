@@ -45,11 +45,11 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
 
-    http.begin("http://sgh721qbmq:1337/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
+    http.begin("http://10.179.131.50:1338/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
 
     int httpCode = http.GET(); //Send the request
     String chart = "['";
-
+    //Serial.println(httpCode);
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
       int count = 0;
@@ -60,7 +60,7 @@ void loop() {
       //Serial.println(count);
       Serial.println(payload);             //Print the response payload
       int testArray[count];
-      for (int i = 0; i < count ; i++) {
+      for (int i = count - 1; i >= 0 ; i--) {
         String part = getValue(payload, '}', i);
         testArray[i] = part.substring(22, 33).toInt();
         //Serial.println(testArray[i]);

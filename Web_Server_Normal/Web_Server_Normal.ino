@@ -81,7 +81,7 @@ void menu() {
   delay(10);
   ss.replace("[10,10,10,10,10,10,10]", timeData);
   //Serial.println(s);
-  //Serial.println(ss);
+  Serial.println(ss);
   server.send(200, "text/html", ss);
 }
 
@@ -97,7 +97,7 @@ void handleNotFound() {
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
 
-    http.begin("http://sgh721qbmq:1337/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
+    http.begin("http://10.179.131.50:1338/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
 
     int httpCode = http.GET(); //Send the request
     tempData = "[";
@@ -138,7 +138,7 @@ void httpDataGet() {
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
 
-    http.begin("http://sgh721qbmq:1337/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
+    http.begin("http://10.179.131.50:1338/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
 
     int httpCode = http.GET(); //Send the request
     timeData = "['";
@@ -155,7 +155,7 @@ void httpDataGet() {
       //Serial.println(payload);             //Print the response payload
       int testArray[count];
       int testArray1[count];
-      for (int i = 0; i < count ; i++) {
+      for (int i = count - 1 ; i >= 0 ; i--) {
         String part = getValue(payload, '}', i);
         testArray1[i] = part.substring(22, 33).toInt();
         //Serial.println(testArray[i]);
@@ -168,7 +168,14 @@ void httpDataGet() {
         timeData += " ";
         timeData += hour(t);
         timeData += ":";
-        timeData += minute(t);
+        int minut = minute(t);
+        if (minut < 10){
+          timeData += "0";
+          timeData += minute(t);
+        }
+        else{
+          timeData += minut;
+        }
         timeData += "','";
 
         int dataPos = part.lastIndexOf(":") + 1;
@@ -230,7 +237,7 @@ void postTempValue(float temperature) {
  
     HTTPClient http;    //Declare object of class HTTPClient
  
-    http.begin("http://sgh721qbmq:1337/itrolley");      //Specify request destination
+    http.begin("http://10.179.131.50:1338/itrolley");      //Specify request destination
     http.addHeader("Content-Type", "application/json");  //Specify content-type header
  
     int httpCode = http.POST(JSONmessageBuffer);   //Send the request

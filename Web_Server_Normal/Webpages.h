@@ -154,6 +154,7 @@ const char Menu[] PROGMEM = R"=====(
 <Title>iTrolley</Title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--<meta http-equiv="refresh" content="5">-->
 <title>Page Title</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
