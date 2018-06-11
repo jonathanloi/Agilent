@@ -78,10 +78,9 @@ void menu() {
   //httpTempGet();
   httpDataGet();
   ss.replace("[0, 0, 0, 0, 0, 0, 0]", tempData);
-  delay(10);
   ss.replace("[10,10,10,10,10,10,10]", timeData);
   //Serial.println(s);
-  Serial.println(ss);
+  //Serial.println(ss);
   server.send(200, "text/html", ss);
 }
 
@@ -148,18 +147,24 @@ void httpDataGet() {
       String payload = http.getString();   //Get the request response payload
       int count = 0;
       for (int i = 0; i <= payload.length(); i++) {
-        if (payload.substring(i, i + 1) == "}")
+        if (payload.substring(i, i + 1) == "{")
           count++;
       }
       //Serial.println(count);
       //Serial.println(payload);             //Print the response payload
       int testArray[count];
       int testArray1[count];
-      for (int i = count - 1 ; i >= 0 ; i--) {
-        String part = getValue(payload, '}', i);
-        testArray1[i] = part.substring(22, 33).toInt();
+      for (int i = count ; i > 0 ; i--) {
+        String part = "{";
+        part += getValue(payload, '{', i);
+        StaticJsonBuffer<200> jBuffer;
+        JsonObject& jObject = jBuffer.parseObject(part);
+        String tem = jObject["temperature"];
+        String tim = jObject["createdAt"];
+        //testArray1[i] = part.substring(22, 33).toInt();
         //Serial.println(testArray[i]);
-        time_t t = testArray1[i] + 28800;
+        int utime = tim.substring(0,tim.length() - 3).toInt();
+        time_t t = utime + 28800;
         timeData += day(t);
         timeData += "/";
         timeData += month(t);
@@ -169,19 +174,19 @@ void httpDataGet() {
         timeData += hour(t);
         timeData += ":";
         int minut = minute(t);
-        if (minut < 10){
-          timeData += "0";
-          timeData += minute(t);
-        }
-        else{
-          timeData += minut;
-        }
+          if (minut < 10){
+            timeData += "0";
+            timeData += minute(t);
+          }
+          else{
+            timeData += minut;
+          }
         timeData += "','";
 
-        int dataPos = part.lastIndexOf(":") + 1;
-        testArray[i] = part.substring(dataPos).toInt();
+        //int dataPos = part.lastIndexOf(":") + 1;
+        //testArray[i] = part.substring(dataPos).toInt();
         //Serial.println(testArray[i]);
-        tempData += testArray[i];
+        tempData += tem;
         tempData += ", ";
       }
       timeData = timeData.substring(0, timeData.length() - 2);
