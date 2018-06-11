@@ -1,11 +1,13 @@
+#include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+
 
 void setup () {
   Serial.begin(115200);
   pinMode (LED_BUILTIN, OUTPUT);
   WiFi.begin("abcd", "6oM47!92");
-
+  
   while (WiFi.status() != WL_CONNECTED) {
     
     Serial.println("Connecting...");
@@ -13,34 +15,44 @@ void setup () {
     
   }
   Serial.println("Connected!");
- 
+
 }
 void loop() {
 
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
 
-    http.begin("http://sgh721qbmq:1337/itrolley?limit=10"); //Specify request destination
+    http.begin("http://10.179.131.50:1338/itrolley?limit=8&sort=id%20DESC"); //Specify request destination
 
     int httpCode = http.GET(); //Send the request
     String chart = "[";
 
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
+      payload.remove(0,1);
+      //Serial.println(payload);             //Print the response payload
       int count = 0;
       for (int i = 0; i <= payload.length(); i++) {
-        if (payload.substring(i, i + 1) == "}")
+        if (payload.substring(i, i + 1) == "{")
           count++;
       }
-      Serial.println(count);
-      //Serial.println(payload);             //Print the response payload
+      //Serial.println(count);
+      
       //Serial.println(payload.substring(105,108));
       int testArray[count];
-      for (int i = 0; i < count ; i++) {
-        String part = getValue(payload, '}', i);
-        int dataPos = part.lastIndexOf(":") + 1;
-        testArray[i] = part.substring(dataPos).toInt();
-        Serial.println(testArray[i]);
+      for (int i = count; i > 0 ; i--) {
+        String part = "{";
+        part += getValue(payload, '{', i);
+        Serial.println(part);
+        //int dataPos = part.lastIndexOf(":") + 1;
+        //testArray[i] = part.substring(dataPos).toInt(); 
+        StaticJsonBuffer<200> jBuffer;
+        JsonObject& jObject = jBuffer.parseObject(part);
+        String tem = jObject["temperature"];
+        String tim = jObject["createdAt"];
+        testArray[i] = tem.toInt();
+        Serial.println(tem);
+        Serial.println(tim);
         chart += testArray[i];
         chart += ", ";
       }
@@ -48,7 +60,7 @@ void loop() {
       chart += "]";
       Serial.println(chart);
     } 
-    else Serial.println("An error ocurred");
+    //else Serial.println("An error ocurred");
     http.end();   //Close connection
 
   }
