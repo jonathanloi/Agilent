@@ -16,7 +16,7 @@ const char* password = "6oM47!92";
 
 DHT dht (13, DHT11);
 ESP8266WebServer server(80);
-RBD::Timer temptimer(60000*10);
+RBD::Timer temptimer(60000*30);
 
 
 //define global variables
@@ -60,7 +60,6 @@ void configure_name() {
   }
 }
 
-
 //html for eeprom memory clear
 void memClear() {
   String s = mem_clear;
@@ -75,12 +74,22 @@ void memClear() {
 void menu() {
   String s = Menu;
   String ss = s;
-  //httpTempGet();
-  httpDataGet();
-  ss.replace("[0, 0, 0, 0, 0, 0, 0]", tempData);
-  ss.replace("[10,10,10,10,10,10,10]", timeData);
+  String temperature = String(dht.readTemperature());
+  ss.replace("22",temperature);
+  httpDataGet(0);
+  ss.replace("[0]", tempData);
+  ss.replace("[10]", timeData);
   //Serial.println(s);
   //Serial.println(ss);
+  server.send(200, "text/html", ss);
+}
+
+void viewTemp(){
+  String s = Temperature;
+  String ss = s;
+  httpDataGet(1);
+  ss.replace("[0]", tempData);
+  ss.replace("[10]", timeData);
   server.send(200, "text/html", ss);
 }
 
@@ -132,13 +141,16 @@ void handleNotFound() {
 */
 
 
-void httpDataGet() {
+void httpDataGet(bool type) {
   // put your main code here, to run repeatedly:
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
-
+    if(type==0){
     http.begin("http://10.179.131.50:1338/itrolley?limit=7&sort=id%20DESC"); //Specify request destination
-
+    }
+    else{
+    http.begin("http://10.179.131.50:1338/itrolley?limit=50&sort=id%20DESC"); //Specify request destination  
+    }
     int httpCode = http.GET(); //Send the request
     timeData = "['";
     tempData = "[";
@@ -221,7 +233,6 @@ String getValue(String data, char separator, int index) {
   return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
-
 void postTempValue(float temperature) {
   
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
@@ -231,10 +242,6 @@ void postTempValue(float temperature) {
  
     JSONencoder["name"] = "Temperature";
     JSONencoder["temperature"] = temperature;
-    //JsonArray& values = JSONencoder.createNestedArray("temperature"); //JSON array
-    //values.add(20); //Add value to array
-    //values.add(21); //Add value to array
-    //values.add(23); //Add value to array
  
     char JSONmessageBuffer[300];
     JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
@@ -282,6 +289,7 @@ void setup() {
     server.on("/", menu);
     server.on("/configure", configure_name);
     server.on("/memclear", memClear);
+    server.on("/temperature", viewTemp);
     server.onNotFound(handleNotFound);
     server.begin();
     Serial.println("HTTP server started ");
@@ -297,6 +305,7 @@ void setup() {
     server.on("/", menu);
     server.on("/configure", configure_name);
     server.on("/memclear", memClear);
+    server.on("/temperature", viewTemp);
     server.onNotFound(handleNotFound);
     server.begin();
     Serial.println("HTTP server started");
@@ -305,9 +314,11 @@ void setup() {
 }
 
 void loop() {
-
+  if (WiFi.status() != WL_CONNECTED){
+      wificonnect();
+  }
   if (temptimer.onRestart()){
-  postTempValue(dht.readTemperature());
+      postTempValue(dht.readTemperature());
   }
   server.handleClient();
   
