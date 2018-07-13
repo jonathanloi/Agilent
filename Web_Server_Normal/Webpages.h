@@ -5,25 +5,10 @@ const char mem_clear[] PROGMEM = R"=====(
 <Title>Memory Clear</Title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-.h1 {
-  background-color: rgb(5, 187, 187);
-  font-family: 'Courier New', Courier, monospace;
-  color: black;
-  padding: 30px;
-  text-align: center;
-}
-</style>
-  <script>
+<script>
   window.open("http://itrolley.local/");
-  </script>
+</script>
 </head>
-<div class="h1">
-  <body>
-  <h1>EEPROM memory has been cleared</h1><br> 
-  <p>Please give the trolley 2-3 mins to reboot</p>
-  </body>
-</div>
 </html>
 )=====";
 
