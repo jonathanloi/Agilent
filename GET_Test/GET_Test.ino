@@ -22,15 +22,15 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     HTTPClient http;  //Declare an object of class HTTPClient
 
-    http.begin("http://10.179.131.50:1338/itrolley?limit=8&sort=id%20DESC"); //Specify request destination
+    http.begin("http://10.179.131.50:1338/itrolley/1"); //Specify request destination
 
     int httpCode = http.GET(); //Send the request
     String chart = "[";
 
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
-      payload.remove(0,1);
-      //Serial.println(payload);             //Print the response payload
+      //payload.remove(0,1);
+      Serial.println(payload);             //Print the response payload
       int count = 0;
       for (int i = 0; i <= payload.length(); i++) {
         if (payload.substring(i, i + 1) == "{")
@@ -39,21 +39,19 @@ void loop() {
       //Serial.println(count);
       
       //Serial.println(payload.substring(105,108));
-      int testArray[count];
       for (int i = count; i > 0 ; i--) {
-        String part = "{";
-        part += getValue(payload, '{', i);
-        Serial.println(part);
+        //String part = "{";
+        //part += getValue(payload, '{', i);
+        //Serial.println(part);
         //int dataPos = part.lastIndexOf(":") + 1;
         //testArray[i] = part.substring(dataPos).toInt(); 
-        StaticJsonBuffer<200> jBuffer;
-        JsonObject& jObject = jBuffer.parseObject(part);
+        StaticJsonBuffer<300> jBuffer;
+        JsonObject& jObject = jBuffer.parseObject(payload);
         String tem = jObject["temperature"];
         String tim = jObject["createdAt"];
-        testArray[i] = tem.toInt();
         Serial.println(tem);
         Serial.println(tim);
-        chart += testArray[i];
+        chart += tem;
         chart += ", ";
       }
       chart = chart.substring(0,chart.length() - 2);

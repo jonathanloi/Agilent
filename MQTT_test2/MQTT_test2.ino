@@ -25,7 +25,7 @@ String s = "";
 
 void setup() {
   Serial.begin(115200);
-
+  pinMode(LED_BUILTIN, OUTPUT);
   // Connect to WiFi
   delay(10);
   // We start by connecting to a WiFi network
@@ -51,15 +51,15 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-
+  // Serial.println(WiFi.RSSI());
   // Connect to MQTT
   Serial.print(s + "Connecting to MQTT: " + MQTT_SERVER + " ... ");
   if (client.connect("ESP8266Client")) {
     Serial.println("connected");
-
     mqtt.subscribe("test/inTopic1", topic1_subscriber);
     mqtt.subscribe("test/inTopic2", topic2_subscriber);
-  } else {
+  }
+  else {
     Serial.println(s + "failed, rc=" + client.state());
   }
 
@@ -80,7 +80,13 @@ void publisher() {
 }
 void topic1_subscriber(String topic, String message) {
   Serial.println(s + "Message arrived in function 1 [" + topic + "] " + message);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
 }
 void topic2_subscriber(String topic, String message) {
   Serial.println(s + "Message arrived in function 2 [" + topic + "] " + message);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(5000);
+  digitalWrite(LED_BUILTIN, LOW);
 }

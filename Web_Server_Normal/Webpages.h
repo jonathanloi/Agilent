@@ -198,23 +198,23 @@ const char Menu[] PROGMEM = R"=====(
 <table>
   <tr>
     <td class="td">Assigned Serial No. : </td>
-    <td class="val">1231241435346346457 </td>
+    <td class="val">WIP </td>
   </tr>
   <tr>
-    <td class="td">Instrument Present  :</td>
-    <td class="val">YES </td>
+    <td class="td">Instrument Presence  :</td>
+    <td class="val">FALZ </td>
   </tr>
   <tr>
     <td class="td">Location  :</td>
-    <td class="val">FA </td>
+    <td class="val">WIP </td>
   </tr>
   <tr>
     <td class="td">Bay  :</td>
-    <td class="val">3 </td>
+    <td class="val">WIP </td>
   </tr>
   <tr>
     <td class="td">AC Current  :</td>
-    <td class="val"> 15A</td>
+    <td class="val"> 155A</td>
   </tr>
   <tr>
     <td class="td"><a href="/temperature" >Temperature  :</a></td>
@@ -243,12 +243,6 @@ const char Menu[] PROGMEM = R"=====(
         label: "Current(A)",
         borderColor: "#8e5ea2",
         backgroundColor: "#8e5ea2",
-        fill: false
-      }, { 
-        data: [6, 3, 2, 2, 7, 26, 82],
-        label: "Nil",
-        borderColor: "#c45850",
-        backgroundColor: "#c45850",
         fill: false
       }
     ]

@@ -4,7 +4,6 @@
 <Title>iTrolley</Title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Page Title</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
@@ -58,27 +57,31 @@
 <table>
   <tr>
     <td class="td">Assigned Serial No. : </td>
-    <td class="val">1 </td>
+    <td class="val">1231241435346346457 </td>
   </tr>
   <tr>
-    <td class="td">Instrument's Presence  :</td>
-    <td class="val">3 </td>
-  </tr>
-  <tr>
-    <td class="td">AC Current  :</td>
-    <td class="val"> 5</td>
+    <td class="td">Instrument Present  :</td>
+    <td class="val">YES </td>
   </tr>
   <tr>
     <td class="td">Location  :</td>
-    <td class="val">2 </td>
+    <td class="val">FA </td>
   </tr>
   <tr>
     <td class="td">Bay  :</td>
     <td class="val">3 </td>
   </tr>
+  <tr>
+    <td class="td">AC Current  :</td>
+    <td class="val"> 15A</td>
+  </tr>
+  <tr>
+    <td class="td"><a href="/temperature" >Temperature  :</a></td>
+    <td class="val"> 22°C</td>
+  </tr>
 </table>
 </div>
-<div class="table">
+<!--<div class="table">
 <table>
   <tr>
     <td class="td">Assigned Serial No. : </td>
@@ -101,14 +104,16 @@
     <td class="val">3 </td>
   </tr>
 </table>
-</div>
+</div>-->
+<div>
 <canvas id="myChart"></canvas>
+
 <script>
     var ctx = document.getElementById('myChart').getContext("2d");
     let chart = new Chart(ctx, {
     // The type of chart we want to create
     type: 'line',
-
+    responsive: true,
     // The data for our dataset
     data: {
     labels: ['7/6/2018 11:30','7/6/2018 10:37','7/6/2018 10:14','6/6/2018 14:51','6/6/2018 14:51','6/6/2018 14:26','6/6/2018 14:25'],
@@ -135,9 +140,56 @@
   },
     
 // Configuration options go here
+options: {
+  scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    }
+}
+});     
+</script>
+</div>
+<div>
+<canvas id="yChart"></canvas>  
+<script>
+var ctx2 = document.getElementById('yChart').getContext("2d");
+    let chart = new Chart(ctx2, {
+    // The type of chart we want to create
+    type: 'line',
+    responsive: true,
+    // The data for our dataset
+    data: {
+    labels: ['7/6/2018 11:30','7/6/2018 10:37','7/6/2018 10:14','6/6/2018 14:51','6/6/2018 14:51','6/6/2018 14:26','6/6/2018 14:25'],
+    datasets: [{ 
+        data: ['00', 00, '110', '220', '0', '0', '0'],
+        label: "Temperature",
+        borderColor: "#3e95cd",
+        backgroundColor: "#3e95cd",
+        fill: false
+      }, { 
+        data: [1, 1, 1, 1, 1, 1, 1],
+        label: "Current",
+        borderColor: "#8e5ea2",
+        backgroundColor: "#8e5ea2",
+        fill: false
+      }, { 
+        data: [6, 3, 2, 2, 7, 26, 82],
+        label: "North America",
+        borderColor: "#c45850",
+        backgroundColor: "#c45850",
+        fill: false
+      }
+    ]
+  },
+    
+// Configuration options go here
 options: {}
 });     
-      
-    </script>     
+     
+</script> 
+</div>
 </body>
 </html> 
